@@ -1,0 +1,143 @@
+{
+  "metadata": {
+    "dbt_schema_version": "https://schemas.getdbt.com/dbt/manifest/v11/manifest.json",
+    "dbt_version": "1.8.0",
+    "generated_at": "2024-01-15T10:00:00.000000Z",
+    "invocation_id": "test-fixture-manifest",
+    "env": {}
+  },
+  "nodes": {
+    "model.jaffle_shop.stg_orders": {
+      "name": "stg_orders",
+      "alias": "stg_orders",
+      "resource_type": "model",
+      "description": "Staged orders from the raw orders source table.",
+      "original_file_path": "models/staging/stg_orders.sql",
+      "database": "jaffle_shop",
+      "schema": "dbt_staging",
+      "config": {"materialized": "view"},
+      "raw_code": "SELECT order_id, customer_id, status, amount, order_date FROM {{ source('jaffle_shop', 'orders') }}",
+      "compiled_code": "SELECT order_id, customer_id, status, amount, order_date FROM raw.orders",
+      "columns": {
+        "order_id": {"name": "order_id", "description": "Primary key for orders", "tests": ["not_null", "unique"]},
+        "customer_id": {"name": "customer_id", "description": "Foreign key to customers", "tests": ["not_null"]},
+        "status": {"name": "status", "description": "", "tests": []},
+        "amount": {"name": "amount", "description": "", "tests": []},
+        "order_date": {"name": "order_date", "description": "", "tests": []}
+      },
+      "depends_on": {"nodes": ["source.jaffle_shop.orders"]},
+      "tags": []
+    },
+    "model.jaffle_shop.stg_customers": {
+      "name": "stg_customers",
+      "alias": "stg_customers",
+      "resource_type": "model",
+      "description": "",
+      "original_file_path": "models/staging/stg_customers.sql",
+      "database": "jaffle_shop",
+      "schema": "dbt_staging",
+      "config": {"materialized": "view"},
+      "raw_code": "SELECT customer_id, first_name, last_name, email FROM {{ source('jaffle_shop', 'customers') }}",
+      "compiled_code": "SELECT customer_id, first_name, last_name, email FROM raw.customers",
+      "columns": {
+        "customer_id": {"name": "customer_id", "description": "", "tests": []},
+        "first_name": {"name": "first_name", "description": "", "tests": []},
+        "last_name": {"name": "last_name", "description": "", "tests": []},
+        "email": {"name": "email", "description": "", "tests": []}
+      },
+      "depends_on": {"nodes": ["source.jaffle_shop.customers"]},
+      "tags": []
+    },
+    "model.jaffle_shop.fct_orders": {
+      "name": "fct_orders",
+      "alias": "fct_orders",
+      "resource_type": "model",
+      "description": "",
+      "original_file_path": "models/marts/fct_orders.sql",
+      "database": "jaffle_shop",
+      "schema": "dbt_marts",
+      "config": {"materialized": "table"},
+      "raw_code": "SELECT o.order_id, o.customer_id, o.status, o.amount, c.first_name FROM stg_orders o JOIN stg_customers c ON o.customer_id = c.customer_id",
+      "compiled_code": "",
+      "columns": {
+        "order_id": {"name": "order_id", "description": "", "tests": []},
+        "customer_id": {"name": "customer_id", "description": "", "tests": []},
+        "status": {"name": "status", "description": "", "tests": []},
+        "amount": {"name": "amount", "description": "", "tests": []}
+      },
+      "depends_on": {"nodes": ["model.jaffle_shop.stg_orders", "model.jaffle_shop.stg_customers"]},
+      "tags": []
+    },
+    "model.jaffle_shop.dim_customers": {
+      "name": "dim_customers",
+      "alias": "dim_customers",
+      "resource_type": "model",
+      "description": "Customer dimension table with lifetime metrics.",
+      "original_file_path": "models/marts/dim_customers.sql",
+      "database": "jaffle_shop",
+      "schema": "dbt_marts",
+      "config": {"materialized": "table"},
+      "raw_code": "SELECT c.customer_id, c.first_name, c.last_name, COUNT(o.order_id) as lifetime_orders FROM stg_customers c LEFT JOIN stg_orders o ON c.customer_id = o.customer_id GROUP BY 1,2,3",
+      "compiled_code": "",
+      "columns": {
+        "customer_id": {"name": "customer_id", "description": "Unique customer ID", "tests": ["not_null", "unique"]},
+        "first_name": {"name": "first_name", "description": "Customer first name", "tests": []},
+        "last_name": {"name": "last_name", "description": "Customer last name", "tests": []},
+        "lifetime_orders": {"name": "lifetime_orders", "description": "Total number of orders placed", "tests": []}
+      },
+      "depends_on": {"nodes": ["model.jaffle_shop.stg_customers", "model.jaffle_shop.stg_orders"]},
+      "tags": []
+    },
+    "model.jaffle_shop.orphan_model": {
+      "name": "orphan_model",
+      "alias": "orphan_model",
+      "resource_type": "model",
+      "description": "",
+      "original_file_path": "models/orphan_model.sql",
+      "database": "jaffle_shop",
+      "schema": "dbt_staging",
+      "config": {"materialized": "view"},
+      "raw_code": "SELECT 1 as id",
+      "compiled_code": "SELECT 1 as id",
+      "columns": {},
+      "depends_on": {"nodes": []},
+      "tags": []
+    },
+    "model.jaffle_shop.BadNameModel": {
+      "name": "BadNameModel",
+      "alias": "BadNameModel",
+      "resource_type": "model",
+      "description": "",
+      "original_file_path": "models/BadNameModel.sql",
+      "database": "jaffle_shop",
+      "schema": "dbt_staging",
+      "config": {"materialized": "view"},
+      "raw_code": "SELECT 1 as id",
+      "compiled_code": "SELECT 1 as id",
+      "columns": {},
+      "depends_on": {"nodes": []},
+      "tags": []
+    }
+  },
+  "sources": {
+    "source.jaffle_shop.orders": {
+      "name": "orders",
+      "source_name": "jaffle_shop",
+      "identifier": "orders",
+      "database": "raw",
+      "schema": "public",
+      "description": "Raw orders table from the production database.",
+      "loaded_at_field": "updated_at"
+    },
+    "source.jaffle_shop.customers": {
+      "name": "customers",
+      "source_name": "jaffle_shop",
+      "identifier": "customers",
+      "database": "raw",
+      "schema": "public",
+      "description": "Raw customers table.",
+      "loaded_at_field": null
+    }
+  },
+  "exposures": {}
+}

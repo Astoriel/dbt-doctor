@@ -1,0 +1,45 @@
+Metadata-Version: 2.4
+Name: dbt-sage
+Version: 0.1.0
+Summary: MCP Server for dbt (Model Context Protocol). Add AI to your Data Engineering workflow.
+Author: Orb
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: mcp[cli]>=1.3.0
+Requires-Dist: dbt-core>=1.8.0
+Requires-Dist: ruamel.yaml>=0.18.6
+
+# dbt-sage
+
+An MCP (Model Context Protocol) Server for `dbt` projects. This allows AI Assistants (like Claude Desktop, Cursor) to natively understand your data warehouse, read `dbt` models, analyze upstream dependencies, and write well-documented `schema.yml` files with tests based on real data profiling.
+
+## Features
+
+* 📖 **Context Awareness:** Reads your `target/manifest.json` to understand your entire project's DAG.
+* 📊 **Data Profiling (Coming Soon):** Connects to your DWH to provide real data statistics (null rates, unique counts) to the AI to help generate better tests.
+* ✍️ **Smart YAML Writing (Coming Soon):** Safely updates your `schema.yml` files (preserving human comments) using `ruamel.yaml`.
+
+## Installation (Development)
+
+Requires Python 3.10+. We recommend using `uv`.
+
+```bash
+uv venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+uv pip install -e .
+```
+
+## Setup for Claude Desktop
+
+Add this to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "dbt-sage": {
+      "command": "dbt-sage",
+      "args": ["--project-dir", "/path/to/your/dbt/project"]
+    }
+  }
+}
+```

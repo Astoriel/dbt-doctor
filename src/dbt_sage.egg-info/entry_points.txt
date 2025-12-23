@@ -1,0 +1,2 @@
+[console_scripts]
+dbt-sage = dbt_sage.server:main
