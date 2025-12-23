@@ -23,7 +23,9 @@ class DagAnalyzer:
     - High fan-out models (one model feeding many others)
     """
 
-    def analyze(self, models: list[dict[str, Any]], exposures: list[dict[str, Any]] | None = None) -> DagReport:
+    def analyze(
+        self, models: list[dict[str, Any]], exposures: list[dict[str, Any]] | None = None
+    ) -> DagReport:
         """
         Parameters
         ----------

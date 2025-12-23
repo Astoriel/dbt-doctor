@@ -143,8 +143,7 @@ class YamlWriter:
                     if new_col.get("tests"):
                         existing_tests = list(existing.get("tests") or [])
                         existing_test_names = {
-                            (t if isinstance(t, str) else next(iter(t), ""))
-                            for t in existing_tests
+                            (t if isinstance(t, str) else next(iter(t), "")) for t in existing_tests
                         }
                         for t in new_col["tests"]:
                             t_name = t if isinstance(t, str) else next(iter(t), "")

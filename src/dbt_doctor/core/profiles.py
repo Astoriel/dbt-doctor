@@ -17,6 +17,7 @@ _ENV_VAR_RE = re.compile(r"\{\{\s*env_var\(['\"]([^'\"]+)['\"]\)\s*\}\}")
 def _replace_env_vars(value: Any) -> Any:
     """Recursively replace dbt env_var() references with actual environment values."""
     if isinstance(value, str):
+
         def replacer(match: re.Match) -> str:
             var_name = match.group(1)
             resolved = os.environ.get(var_name, "")

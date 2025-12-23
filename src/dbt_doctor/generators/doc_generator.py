@@ -36,7 +36,9 @@ class DocGenerator:
     This gives the AI (or user) a chance to review before mutating files.
     """
 
-    def __init__(self, profiler: DataProfiler, suggester: TestSuggester, writer: YamlWriter) -> None:
+    def __init__(
+        self, profiler: DataProfiler, suggester: TestSuggester, writer: YamlWriter
+    ) -> None:
         self._profiler = profiler
         self._suggester = suggester
         self._writer = writer
@@ -67,7 +69,9 @@ class DocGenerator:
         try:
             profile = self._profiler.profile_table(schema, table)
         except Exception as exc:
-            logger.warning("Could not profile %s.%s: %s. Skipping data-driven suggestions.", schema, table, exc)
+            logger.warning(
+                "Could not profile %s.%s: %s. Skipping data-driven suggestions.", schema, table, exc
+            )
             profile = None
 
         suggestions: ModelTestSuggestions | None = None
@@ -106,7 +110,9 @@ class DocGenerator:
             "═" * 60,
         ]
         if preview.profile:
-            lines.append(f"  Table: {preview.profile.schema}.{preview.profile.table} ({preview.profile.total_rows:,} rows)")
+            lines.append(
+                f"  Table: {preview.profile.schema}.{preview.profile.table} ({preview.profile.total_rows:,} rows)"
+            )
         if preview.description:
             lines.append(f"  Description: {preview.description[:80]}...")
         if preview.columns:

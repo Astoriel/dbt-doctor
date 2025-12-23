@@ -129,8 +129,7 @@ def get_model_details(model_name: str) -> str:
             tests = col.get("tests", [])
             test_str = ", ".join(t if isinstance(t, str) else next(iter(t)) for t in tests)
             lines.append(
-                f"  {col_name:<35}  desc={'✅' if desc else '❌'}  "
-                f"tests=[{test_str or 'none'}]"
+                f"  {col_name:<35}  desc={'✅' if desc else '❌'}  tests=[{test_str or 'none'}]"
             )
     else:
         lines.append("  (no columns in manifest — run `dbt parse` to populate)")
@@ -178,7 +177,13 @@ def audit_project() -> str:
     for m in models:
         details = parser.get_model_details(m["name"])
         if details:
-            enriched.append({**m, "columns": details.get("columns", {}), "description": details.get("description", "")})
+            enriched.append(
+                {
+                    **m,
+                    "columns": details.get("columns", {}),
+                    "description": details.get("description", ""),
+                }
+            )
         else:
             enriched.append(m)
 
@@ -203,7 +208,13 @@ def check_test_coverage() -> str:
     enriched = []
     for m in models:
         details = parser.get_model_details(m["name"]) or {}
-        enriched.append({**m, "columns": details.get("columns", {}), "description": details.get("description", "")})
+        enriched.append(
+            {
+                **m,
+                "columns": details.get("columns", {}),
+                "description": details.get("description", ""),
+            }
+        )
 
     report = _auditor.audit(enriched)
 
@@ -268,7 +279,13 @@ def get_project_health() -> str:
     enriched = []
     for m in models:
         details = parser.get_model_details(m["name"]) or {}
-        enriched.append({**m, "columns": details.get("columns", {}), "description": details.get("description", "")})
+        enriched.append(
+            {
+                **m,
+                "columns": details.get("columns", {}),
+                "description": details.get("description", ""),
+            }
+        )
 
     report = _auditor.audit(enriched)
     exposures = parser.get_all_exposures()
@@ -301,9 +318,7 @@ def get_project_health() -> str:
     if report.test_score < 60:
         worst = report.worst_models[:3]
         worst_names = ", ".join(m.name for m in worst)
-        lines.append(
-            f"  {priority}. Run `suggest_tests` on: {worst_names}"
-        )
+        lines.append(f"  {priority}. Run `suggest_tests` on: {worst_names}")
         priority += 1
     if dag_report.orphan_models:
         lines.append(
@@ -312,12 +327,12 @@ def get_project_health() -> str:
         )
         priority += 1
     if report.column_doc_score < 30:
-        lines.append(
-            f"  {priority}. Use `generate_model_docs` for E2E auto-documentation"
-        )
+        lines.append(f"  {priority}. Use `generate_model_docs` for E2E auto-documentation")
         priority += 1
     if _connector is not None:
-        lines.append(f"  {priority}. ✅ DB connected — run `detect_schema_drift` to check for drift")
+        lines.append(
+            f"  {priority}. ✅ DB connected — run `detect_schema_drift` to check for drift"
+        )
     else:
         lines.append(
             f"  {priority}. ⚠️  No DB connection — profiling tools unavailable. "
@@ -614,6 +629,7 @@ def _build_connector(project_dir: str) -> BaseConnector | None:
     if db_type == "postgres":
         try:
             from .connectors.postgres import PostgresConnector
+
             conn = PostgresConnector(creds)
             logger.info("PostgreSQL connector initialized.")
             return conn
@@ -622,6 +638,7 @@ def _build_connector(project_dir: str) -> BaseConnector | None:
     elif db_type == "duckdb":
         try:
             from .connectors.duckdb import DuckDBConnector
+
             db_path = creds.get("path", ":memory:")
             conn = DuckDBConnector(db_path)
             logger.info("DuckDB connector initialized (path=%s).", db_path)

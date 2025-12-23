@@ -146,9 +146,13 @@ class SchemaDriftDetector:
                     lines.append(f"    + {drift.column_name}  [{drift.db_type}]")
                     lines.append("      → Run `update_model_yaml` to document this column")
             if report.removed_from_db:
-                lines.append(f"\n  🗑️  Stale in dbt docs (removed from DB): {len(report.removed_from_db)}")
+                lines.append(
+                    f"\n  🗑️  Stale in dbt docs (removed from DB): {len(report.removed_from_db)}"
+                )
                 for drift in report.removed_from_db:
-                    lines.append(f"    - {drift.column_name}  [{drift.manifest_type or 'unknown type'}]")
+                    lines.append(
+                        f"    - {drift.column_name}  [{drift.manifest_type or 'unknown type'}]"
+                    )
                     lines.append("      → Remove from schema.yml manually")
             if report.type_changes:
                 lines.append(f"\n  🔀 Type changes: {len(report.type_changes)}")

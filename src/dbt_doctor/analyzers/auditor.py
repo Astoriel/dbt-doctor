@@ -136,9 +136,7 @@ class ProjectAuditor:
                 report.models_with_description += 1
 
             col_count = len(columns)
-            doc_col_count = sum(
-                1 for c in columns.values() if c.get("description", "").strip()
-            )
+            doc_col_count = sum(1 for c in columns.values() if c.get("description", "").strip())
             tested_col_count = _count_tested_columns(columns)
 
             # A model "has any test" if at least one column has a test
@@ -151,9 +149,7 @@ class ProjectAuditor:
 
             naming_ok, naming_issue = _check_naming(name)
             if not naming_ok:
-                report.naming_violations.append(
-                    {"model": name, "issue": naming_issue}
-                )
+                report.naming_violations.append({"model": name, "issue": naming_issue})
 
             result = ModelAuditResult(
                 name=name,
@@ -202,14 +198,14 @@ class ProjectAuditor:
             for m in report.worst_models[:5]:
                 doc_pct = round(m.doc_coverage * 100)
                 test_pct = round(m.test_coverage * 100)
-                lines.append(
-                    f"    • {m.name:<35}  docs:{doc_pct:>3}%  tests:{test_pct:>3}%"
-                )
+                lines.append(f"    • {m.name:<35}  docs:{doc_pct:>3}%  tests:{test_pct:>3}%")
             lines.append("")
 
         lines.append("  💡 Recommendations:")
         if report.model_doc_score < 80:
-            lines.append("    → Run `get_model_details` + `update_model_yaml` on undocumented models")
+            lines.append(
+                "    → Run `get_model_details` + `update_model_yaml` on undocumented models"
+            )
         if report.test_score < 60:
             lines.append("    → Run `suggest_tests` on worst-covered models")
         if report.column_doc_score < 50:

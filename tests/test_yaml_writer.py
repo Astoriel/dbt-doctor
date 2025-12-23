@@ -109,5 +109,5 @@ models:
         columns=[{"name": "status", "tests": ["accepted_values"]}],
     )
     content = Path(result["file_path"]).read_text()
-    assert "order_id" in content   # old column preserved
-    assert "status" in content     # new column added
+    assert "order_id" in content  # old column preserved
+    assert "status" in content  # new column added

@@ -37,9 +37,7 @@ class ColumnProfile:
     def is_likely_pk(self) -> bool:
         """True if column looks like a primary key (unique + not null)."""
         return (
-            self.null_rate == 0.0
-            and self.unique_count == self.total_rows
-            and self.total_rows > 0
+            self.null_rate == 0.0 and self.unique_count == self.total_rows and self.total_rows > 0
         )
 
 
@@ -53,8 +51,22 @@ class TableProfile:
 
 
 _NUMERIC_TYPES = frozenset(
-    ["integer", "bigint", "smallint", "numeric", "float", "double", "real",
-     "decimal", "int", "int4", "int8", "float4", "float8", "number"]
+    [
+        "integer",
+        "bigint",
+        "smallint",
+        "numeric",
+        "float",
+        "double",
+        "real",
+        "decimal",
+        "int",
+        "int4",
+        "int8",
+        "float4",
+        "float8",
+        "number",
+    ]
 )
 _TEMPORAL_TYPES = frozenset(["date", "timestamp", "timestamptz", "datetime", "time"])
 
@@ -108,12 +120,12 @@ class DataProfiler:
         agg = agg_rows[0] if agg_rows else {}
 
         # 4. Get sample rows (up to 5)
-        sample_rows = self._connector.execute_query(
-            f"SELECT * FROM {schema}.{table} LIMIT 5"
-        )
+        sample_rows = self._connector.execute_query(f"SELECT * FROM {schema}.{table} LIMIT 5")
 
         # 5. Build profiles
-        profile = TableProfile(schema=schema, table=table, total_rows=total_rows, sample_rows=sample_rows)
+        profile = TableProfile(
+            schema=schema, table=table, total_rows=total_rows, sample_rows=sample_rows
+        )
         for col in columns:
             cname = col.name
             cp = ColumnProfile(
@@ -143,8 +155,10 @@ class DataProfiler:
         ]
         for col in profile.column_profiles.values():
             lines.append(f"\n  Column: {col.name}  [{col.data_type}]")
-            lines.append(f"    Non-null: {col.non_null_count:,} / {col.total_rows:,}  "
-                         f"(null rate: {col.null_rate}%)")
+            lines.append(
+                f"    Non-null: {col.non_null_count:,} / {col.total_rows:,}  "
+                f"(null rate: {col.null_rate}%)"
+            )
             lines.append(f"    Unique:   {col.unique_count:,}  (unique rate: {col.unique_rate}%)")
             if col.min_val is not None:
                 lines.append(f"    Min: {col.min_val}  |  Max: {col.max_val}")

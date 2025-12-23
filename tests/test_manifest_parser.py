@@ -1,7 +1,5 @@
 """Tests: DbtManifestParser with sample manifest fixture."""
 
-
-
 from dbt_doctor.core.manifest import DbtManifestParser
 
 

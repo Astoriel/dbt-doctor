@@ -35,12 +35,11 @@ class DuckDBConnector(BaseConnector):
     def __init__(self, database: str = ":memory:") -> None:
         try:
             import duckdb  # type: ignore[import]
+
             self._conn = duckdb.connect(database)
             logger.info("DuckDB connected to '%s'", database)
         except ImportError as exc:
-            raise ImportError(
-                "duckdb is required. Install with: pip install duckdb"
-            ) from exc
+            raise ImportError("duckdb is required. Install with: pip install duckdb") from exc
 
     def execute_query(self, sql: str, params: tuple | None = None) -> list[dict[str, Any]]:
         _assert_read_only(sql)

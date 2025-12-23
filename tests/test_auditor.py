@@ -37,8 +37,12 @@ def test_perfect_coverage():
 def test_zero_coverage():
     auditor = ProjectAuditor()
     models = [
-        _make_model("fct_orders", description="", columns={"order_id": {"description": "", "tests": []}}),
-        _make_model("stg_users", description="", columns={"user_id": {"description": "", "tests": []}}),
+        _make_model(
+            "fct_orders", description="", columns={"order_id": {"description": "", "tests": []}}
+        ),
+        _make_model(
+            "stg_users", description="", columns={"user_id": {"description": "", "tests": []}}
+        ),
     ]
     report = auditor.audit(models)
     assert report.model_doc_score == 0.0
@@ -50,9 +54,9 @@ def test_zero_coverage():
 def test_naming_violations():
     auditor = ProjectAuditor()
     models = [
-        _make_model("BadModelName"),   # CamelCase — violation
-        _make_model("stg_orders"),     # OK
-        _make_model("My Model"),       # spaces — violation
+        _make_model("BadModelName"),  # CamelCase — violation
+        _make_model("stg_orders"),  # OK
+        _make_model("My Model"),  # spaces — violation
     ]
     report = auditor.audit(models)
     assert len(report.naming_violations) == 2
@@ -83,12 +87,12 @@ def test_partial_column_coverage():
 def test_worst_models_ordering():
     auditor = ProjectAuditor()
     models = [
-        _make_model("model_a", description="Documented", columns={
-            "id": {"description": "pk", "tests": ["not_null"]}
-        }),
-        _make_model("model_b", description="", columns={
-            "id": {"description": "", "tests": []}
-        }),
+        _make_model(
+            "model_a",
+            description="Documented",
+            columns={"id": {"description": "pk", "tests": ["not_null"]}},
+        ),
+        _make_model("model_b", description="", columns={"id": {"description": "", "tests": []}}),
     ]
     report = auditor.audit(models)
     worst = report.worst_models
@@ -102,4 +106,3 @@ def test_format_report_contains_score():
     formatted = auditor.format_report(report)
     assert "Overall Score" in formatted
     assert "%" in formatted
-

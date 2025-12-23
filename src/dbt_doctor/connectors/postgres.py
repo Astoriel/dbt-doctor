@@ -36,6 +36,7 @@ class PostgresConnector(BaseConnector):
     def __init__(self, credentials: dict[str, Any]) -> None:
         try:
             import psycopg  # type: ignore[import]
+
             self._psycopg = psycopg
         except ImportError as exc:
             raise ImportError(

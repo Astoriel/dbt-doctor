@@ -18,7 +18,9 @@ def _make_profile(columns_data: dict) -> TableProfile:
         )
         cp.sample_values = spec.get("sample_values", [])
         col_profiles[name] = cp
-    return TableProfile(schema="test", table="test_table", total_rows=total_rows, column_profiles=col_profiles)
+    return TableProfile(
+        schema="test", table="test_table", total_rows=total_rows, column_profiles=col_profiles
+    )
 
 
 def test_not_null_suggested_when_zero_nulls():
@@ -36,26 +38,33 @@ def test_unique_suggested_when_all_unique():
 
 
 def test_accepted_values_for_low_cardinality():
-    profile = _make_profile({"status": {
-        "non_null_count": 100,
-        "unique_count": 3,
-        "sample_values": ["placed", "shipped", "completed"],
-    }})
+    profile = _make_profile(
+        {
+            "status": {
+                "non_null_count": 100,
+                "unique_count": 3,
+                "sample_values": ["placed", "shipped", "completed"],
+            }
+        }
+    )
     sugg = TestSuggester().suggest(profile, "test_model")
     tests = {t.test_name for t in sugg.column_suggestions.get("status", [])}
     assert "accepted_values" in tests
 
 
 def test_accepted_values_includes_actual_values():
-    profile = _make_profile({"status": {
-        "non_null_count": 100,
-        "unique_count": 2,
-        "sample_values": ["active", "inactive"],
-    }})
+    profile = _make_profile(
+        {
+            "status": {
+                "non_null_count": 100,
+                "unique_count": 2,
+                "sample_values": ["active", "inactive"],
+            }
+        }
+    )
     sugg = TestSuggester().suggest(profile, "test_model")
     accepted_test = next(
-        t for t in sugg.column_suggestions.get("status", [])
-        if t.test_name == "accepted_values"
+        t for t in sugg.column_suggestions.get("status", []) if t.test_name == "accepted_values"
     )
     assert "active" in accepted_test.config.get("values", [])
 

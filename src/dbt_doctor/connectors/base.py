@@ -8,6 +8,7 @@ from typing import Any
 @dataclass
 class ColumnInfo:
     """Metadata about a database column."""
+
     name: str
     data_type: str
     is_nullable: bool = True
