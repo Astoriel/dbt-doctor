@@ -1,2 +1,0 @@
-[console_scripts]
-dbt-doctor = dbt_doctor.server:main
