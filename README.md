@@ -171,30 +171,30 @@ AI  → analyze_dag()
 
 ```
 ┌─────────────────────────────────────────────┐
-│           Your AI Assistant                  │
-│      (Claude / Cursor / Copilot Chat)        │
+│           Your AI Assistant                 │
+│      (Claude / Cursor / Copilot Chat)       │
 └──────────────────┬──────────────────────────┘
                    │  MCP Protocol
 ┌──────────────────▼──────────────────────────┐
-│          dbt-doctor MCP Server               │
+│          dbt-doctor MCP Server              │
 │                                             │
-│  ┌─────────┐ ┌───────┐ ┌──────┐ ┌───────┐  │
-│  │ Context │ │ Audit │ │ Prof │ │  Gen  │  │
-│  └────┬────┘ └───┬───┘ └──┬───┘ └───┬───┘  │
-│       └──────────┴─────────┴─────────┘      │
-│                   │                          │
+│  ┌─────────┐ ┌───────┐ ┌──────┐ ┌───────┐   │
+│  │ Context │ │ Audit │ │ Prof │ │  Gen  │   │
+│  └────┬────┘ └───┬───┘ └──┬───┘ └───┬───┘   │
+│       └──────────┴────────┴─────────┘       │
+│                   │                         │
 │  ┌────────────────▼────────────────────┐    │
-│  │           Core Layer                 │    │
+│  │           Core Layer                │    │
 │  │  manifest.py  profiles.py  project  │    │
 │  └────────────────┬────────────────────┘    │
 └───────────────────┼─────────────────────────┘
           ┌─────────┴──────────┐
           ▼                    ▼
   ┌───────────────┐   ┌─────────────────┐
-  │  dbt Project  │   │    Database      │
-  │ manifest.json │   │  PostgreSQL /    │
-  │ dbt_proj.yml  │   │  DuckDB          │
-  │ schema/*.yml  │   │                  │
+  │  dbt Project  │   │    Database     │
+  │ manifest.json │   │  PostgreSQL /   │
+  │ dbt_proj.yml  │   │  DuckDB         │
+  │ schema/*.yml  │   │                 │
   └───────────────┘   └─────────────────┘
 ```
 
