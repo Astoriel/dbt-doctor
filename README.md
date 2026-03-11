@@ -1,6 +1,5 @@
 <div align="center">
-  <img src="logo.png" alt="dbt-doctor logo" width="150"/>
-  <h1>dbt-doctor</h1>
+  <img src="logo.png" alt="dbt-doctor logo" width="300"/>
   <p><strong>AI-driven quality and governance MCP Server for dbt projects.</strong></p>
   <p>Audit coverage, profile data, detect schema drift, and auto-generate documentation—all through natural language with an AI assistant.</p>
 </div>
