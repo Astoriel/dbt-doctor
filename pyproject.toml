@@ -37,9 +37,9 @@ dev = [
 dbt-doctor = "dbt_doctor.server:main"
 
 [project.urls]
-Homepage = "https://github.com/yourusername/dbt-doctor"
-Repository = "https://github.com/yourusername/dbt-doctor"
-Issues = "https://github.com/yourusername/dbt-doctor/issues"
+Homepage = "https://github.com/Astoriel/dbt-doctor"
+Repository = "https://github.com/Astoriel/dbt-doctor"
+Issues = "https://github.com/Astoriel/dbt-doctor/issues"
 
 [build-system]
 requires = ["setuptools>=68"]
