@@ -21,6 +21,10 @@
 
 ---
 
+## Project status
+
+Active alpha. Snapshot date: 2025-12-25. See [STATUS.md](STATUS.md) and [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md) for what is working today, what is planned, and what is not claimed.
+
 ## What is dbt-doctor?
 
 dbt-doctor is a Model Context Protocol (MCP) server that provides your AI coding assistant with deep context regarding your dbt project's health. Instead of manually running CLI commands and analyzing outputs, you can interact with your AI:
