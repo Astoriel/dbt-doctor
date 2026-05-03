@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/astoriel-dbt-doctor-badge.png)](https://mseep.ai/app/astoriel-dbt-doctor)
+
 <div align="center">
   <img src="logo.png" alt="dbt-doctor logo" width="300"/>
   <p><strong>AI-driven quality and governance MCP Server for dbt projects.</strong></p>
