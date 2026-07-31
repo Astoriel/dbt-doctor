@@ -1,3 +1,5 @@
+[![MCP Toplist](https://mcptoplist.com/badge/glama%2FAstoriel%2Fdbt-doctor.svg)](https://mcptoplist.com/server/glama%2FAstoriel%2Fdbt-doctor)
+
 <div align="center">
   <img src="logo.png" alt="dbt-doctor logo" width="300"/>
   <p><strong>AI-driven quality and governance MCP Server for dbt projects.</strong></p>
