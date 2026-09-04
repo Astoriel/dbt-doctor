@@ -117,6 +117,27 @@
       "columns": {},
       "depends_on": {"nodes": []},
       "tags": []
+    },
+    "test.jaffle_shop.not_null_stg_orders_order_id": {
+      "name": "not_null_stg_orders_order_id",
+      "resource_type": "test",
+      "column_name": "order_id",
+      "depends_on": {"nodes": ["model.jaffle_shop.stg_orders"]},
+      "test_metadata": {"name": "not_null", "kwargs": {"column_name": "order_id"}}
+    },
+    "test.jaffle_shop.unique_stg_orders_order_id": {
+      "name": "unique_stg_orders_order_id",
+      "resource_type": "test",
+      "column_name": "order_id",
+      "depends_on": {"nodes": ["model.jaffle_shop.stg_orders"]},
+      "test_metadata": {"name": "unique", "kwargs": {"column_name": "order_id"}}
+    },
+    "test.jaffle_shop.assert_fct_orders_amount_is_positive": {
+      "name": "assert_fct_orders_amount_is_positive",
+      "resource_type": "test",
+      "column_name": null,
+      "depends_on": {"nodes": ["model.jaffle_shop.fct_orders"]},
+      "test_metadata": null
     }
   },
   "sources": {

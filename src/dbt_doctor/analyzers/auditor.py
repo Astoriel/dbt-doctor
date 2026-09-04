@@ -138,9 +138,11 @@ class ProjectAuditor:
             col_count = len(columns)
             doc_col_count = sum(1 for c in columns.values() if c.get("description", "").strip())
             tested_col_count = _count_tested_columns(columns)
+            has_model_level_test = bool(model.get("model_tests"))
 
-            # A model "has any test" if at least one column has a test
-            if tested_col_count > 0:
+            # A model "has any test" if at least one column has a test, or it has a
+            # model-level (singular/custom) test with no specific column attached.
+            if tested_col_count > 0 or has_model_level_test:
                 report.models_with_any_test += 1
 
             report.total_columns += col_count
