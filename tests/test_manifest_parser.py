@@ -64,6 +64,33 @@ def test_get_all_sources(project_dir_with_manifest):
     assert "orders" in names
 
 
+def test_get_model_details_column_tests(project_dir_with_manifest):
+    """Generic (column-level) tests should be attached to the matching column."""
+    parser = DbtManifestParser(str(project_dir_with_manifest))
+    parser.load()
+    details = parser.get_model_details("stg_orders")
+    assert set(details["columns"]["order_id"]["tests"]) == {"not_null", "unique"}
+    assert details["columns"]["customer_id"]["tests"] == []
+
+
+def test_get_model_details_model_level_test(project_dir_with_manifest):
+    """Singular/custom tests have no column_name and surface as model-level tests."""
+    parser = DbtManifestParser(str(project_dir_with_manifest))
+    parser.load()
+    details = parser.get_model_details("fct_orders")
+    assert details["model_tests"] == ["assert_fct_orders_amount_is_positive"]
+    assert all(col["tests"] == [] for col in details["columns"].values())
+
+
+def test_get_model_details_no_tests(project_dir_with_manifest):
+    """A model with no tests defined anywhere should report empty, not missing, fields."""
+    parser = DbtManifestParser(str(project_dir_with_manifest))
+    parser.load()
+    details = parser.get_model_details("dim_customers")
+    assert details["model_tests"] == []
+    assert all(col["tests"] == [] for col in details["columns"].values())
+
+
 def test_manifest_cache(project_dir_with_manifest):
     """Manifest should not be re-loaded if file hasn't changed."""
     parser = DbtManifestParser(str(project_dir_with_manifest))

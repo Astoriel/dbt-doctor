@@ -44,6 +44,7 @@ class DbtManifestParser:
         self.target_dir = self.project_dir / "target"
         self.manifest_path = self.target_dir / "manifest.json"
         self._cache = ManifestCache()
+        self._test_index: dict[str, dict[str, list[str]]] = {}
 
     def load(self) -> bool:
         """Load manifest if not cached or file changed. Returns True on success."""
@@ -57,6 +58,7 @@ class DbtManifestParser:
             return True
         try:
             self._cache.load(self.manifest_path)
+            self._test_index = self._build_test_index()
             logger.info("Manifest loaded from %s", self.manifest_path)
             return True
         except Exception as exc:
@@ -66,6 +68,28 @@ class DbtManifestParser:
     @property
     def _data(self) -> dict[str, Any]:
         return self._cache.data
+
+    def _build_test_index(self) -> dict[str, dict[str, list[str]]]:
+        """Map each model's unique_id to its tests.
+
+        dbt stores tests as separate top-level nodes rather than nesting them under
+        the model's own `columns`, so this has to be assembled from `depends_on`
+        rather than read off the model node directly. Column-level (generic) tests
+        are keyed by `column_name`; model-level (singular/custom) tests, which have
+        no `column_name`, are keyed under `""`.
+        """
+        index: dict[str, dict[str, list[str]]] = {}
+        for node in self._data.get("nodes", {}).values():
+            if node.get("resource_type") != "test":
+                continue
+            parent_ids = node.get("depends_on", {}).get("nodes", [])
+            if not parent_ids:
+                continue
+            test_metadata = node.get("test_metadata")
+            test_name = test_metadata["name"] if test_metadata else node.get("name", "")
+            column = node.get("column_name") or ""
+            index.setdefault(parent_ids[0], {}).setdefault(column, []).append(test_name)
+        return index
 
     # ------------------------------------------------------------------
     # Models
@@ -99,8 +123,13 @@ class DbtManifestParser:
 
     def get_model_details(self, model_name: str) -> dict[str, Any] | None:
         """Return detailed info for a specific model by name."""
-        for node in self._data.get("nodes", {}).values():
+        for uid, node in self._data.get("nodes", {}).items():
             if node.get("resource_type") == "model" and node.get("name") == model_name:
+                model_tests = self._test_index.get(uid, {})
+                columns = {
+                    col_name: {**col, "tests": model_tests.get(col_name, [])}
+                    for col_name, col in node.get("columns", {}).items()
+                }
                 return {
                     "name": node.get("name"),
                     "description": node.get("description", ""),
@@ -111,7 +140,8 @@ class DbtManifestParser:
                     "materialized": node.get("config", {}).get("materialized", "view"),
                     "raw_sql": node.get("raw_code", node.get("raw_sql", "")),
                     "compiled_sql": node.get("compiled_code", node.get("compiled_sql", "")),
-                    "columns": node.get("columns", {}),
+                    "columns": columns,
+                    "model_tests": model_tests.get("", []),
                     "depends_on": node.get("depends_on", {}).get("nodes", []),
                     "tags": node.get("tags", []),
                     "config": node.get("config", {}),

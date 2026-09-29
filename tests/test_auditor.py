@@ -5,13 +5,14 @@ import pytest
 from dbt_doctor.analyzers.auditor import ProjectAuditor
 
 
-def _make_model(name, description="", columns=None):
+def _make_model(name, description="", columns=None, model_tests=None):
     cols = columns or {}
     return {
         "name": name,
         "original_file_path": f"models/{name}.sql",
         "description": description,
         "columns": cols,
+        "model_tests": model_tests or [],
     }
 
 
@@ -97,6 +98,24 @@ def test_worst_models_ordering():
     report = auditor.audit(models)
     worst = report.worst_models
     assert worst[0].name == "model_b"  # least coverage first
+
+
+def test_model_level_test_counts_as_tested():
+    """A singular/custom test with no column attached should still count for test_score."""
+    auditor = ProjectAuditor()
+    models = [
+        _make_model(
+            "fct_orders",
+            description="Orders fact",
+            columns={"order_id": {"description": "PK", "tests": []}},
+            model_tests=["assert_amount_is_positive"],
+        )
+    ]
+    report = auditor.audit(models)
+    assert report.test_score == 100.0
+    # Model-level tests aren't tied to a column, so they shouldn't inflate the
+    # column-level tested/total ratio.
+    assert report.tested_columns == 0
 
 
 def test_format_report_contains_score():
