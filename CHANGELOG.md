@@ -5,6 +5,15 @@ All notable changes to `dbt-doctor` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Trino support: new `TrinoConnector` selected when the dbt profile has `type: trino`. Supports `none`, `ldap`/`password` and `jwt` authentication. Install with `pip install "dbt-doctor[trino]"`.
+- Tests for `TrinoConnector` (using a fake client) and for adapter selection in `_build_connector`.
+
+### Changed
+- The data profiler now treats `tinyint` columns as numeric.
+
 ## [0.1.0] - 2025-12-23
 
 ### Added

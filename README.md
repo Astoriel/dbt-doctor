@@ -84,7 +84,40 @@ Execute a complete workflow in a single conversational turn: profile a model, su
 
 ```bash
 pip install dbt-doctor
+
+# Optional: Trino support
+pip install "dbt-doctor[trino]"
 ```
+
+### Supported adapters
+
+dbt-doctor reads the connection from the `type` of your dbt `profiles.yml` target.
+
+| Adapter | `type` | Install |
+|---|---|---|
+| PostgreSQL | `postgres` | included |
+| DuckDB | `duckdb` | included |
+| Trino | `trino` | `pip install "dbt-doctor[trino]"` |
+
+For Trino, the same keys as a [dbt-trino](https://github.com/starburstdata/dbt-trino) profile are used:
+
+```yaml
+my_project:
+  target: dev
+  outputs:
+    dev:
+      type: trino
+      method: ldap            # none (default), ldap/password, or jwt
+      host: trino.example.com
+      port: 443               # defaults to 8080 (http) or 443 (https)
+      http_scheme: https      # defaults to http for method none, https for ldap/jwt
+      user: my_user
+      password: "{{ env_var('TRINO_PASSWORD') }}"
+      database: hive          # the Trino catalog (required)
+      schema: analytics
+```
+
+For `method: jwt`, provide `jwt_token`. Other methods (Kerberos, OAuth, certificate) are not supported yet.
 
 ### Configuration (Claude Desktop)
 

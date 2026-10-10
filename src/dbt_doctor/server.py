@@ -645,9 +645,18 @@ def _build_connector(project_dir: str) -> BaseConnector | None:
             return conn
         except Exception as exc:
             logger.error("Failed to create DuckDB connector: %s", exc)
+    elif db_type == "trino":
+        try:
+            from .connectors.trino import TrinoConnector
+
+            conn = TrinoConnector(creds)
+            logger.info("Trino connector initialized.")
+            return conn
+        except Exception as exc:
+            logger.error("Failed to create Trino connector: %s", exc)
     else:
         logger.warning(
-            "Unsupported DB type '%s'. Only 'postgres' and 'duckdb' are supported. "
+            "Unsupported DB type '%s'. Only 'postgres', 'duckdb' and 'trino' are supported. "
             "Profiling tools will be unavailable.",
             db_type,
         )
