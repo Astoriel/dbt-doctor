@@ -22,8 +22,8 @@ def test_profile_table_basic(profile):
 @pytest.mark.parametrize(
     "column, expected_unique",
     [
-        ("order_id", 10),   # all unique
-        ("status", 4),      # placed / shipped / completed / returned
+        ("order_id", 10),  # all unique
+        ("status", 4),  # placed / shipped / completed / returned
     ],
 )
 def test_cardinality(profile, column, expected_unique):
@@ -33,15 +33,13 @@ def test_cardinality(profile, column, expected_unique):
 @pytest.mark.parametrize(
     "column, expected_null_rate",
     [
-        ("order_id", 0.0),    # no nulls
-        ("customer_id", 10.0), # one null out of 10 rows
+        ("order_id", 0.0),  # no nulls
+        ("customer_id", 10.0),  # one null out of 10 rows
         ("status", 0.0),
     ],
 )
 def test_null_rates(profile, column, expected_null_rate):
-    assert profile.column_profiles[column].null_rate == pytest.approx(
-        expected_null_rate, abs=0.1
-    )
+    assert profile.column_profiles[column].null_rate == pytest.approx(expected_null_rate, abs=0.1)
 
 
 def test_unique_rate_for_pk(profile):

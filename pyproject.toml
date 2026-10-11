@@ -26,6 +26,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+trino = [
+    "trino>=0.328.0",
+]
 dev = [
     "pytest>=8.0.0",
     "pytest-cov>=5.0.0",
@@ -47,6 +50,9 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+dbt_doctor = ["description_rubric.json"]
 
 [tool.ruff]
 line-length = 100

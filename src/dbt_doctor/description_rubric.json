@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "pass_ratio": 0.7,
+  "max_score_per_question": 10,
+  "questions": [
+    {
+      "id": "tautology",
+      "text": "Does the description explain the business meaning or rule of the column without just repeating the column name?"
+    },
+    {
+      "id": "unit_format",
+      "text": "Is the unit of measure or format explicit where it matters (currency, timezone/UTC, boolean meaning, percentage, date format)? Score 10 if it does not apply to this column."
+    },
+    {
+      "id": "grain",
+      "text": "Is the grain clear: what one row of the model represents or, for keys and identifiers, which entity they identify?"
+    },
+    {
+      "id": "sql_logic",
+      "text": "Does the description reflect non-trivial logic in the SQL (CASE WHEN, COALESCE, filters, joins, aggregations), including exceptions and default values? Score 10 if the column is a plain passthrough."
+    },
+    {
+      "id": "business_clarity",
+      "text": "Can a business user understand where the value comes from or how it is calculated without reading the SQL?"
+    }
+  ]
+}

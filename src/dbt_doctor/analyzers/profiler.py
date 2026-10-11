@@ -55,6 +55,7 @@ _NUMERIC_TYPES = frozenset(
         "integer",
         "bigint",
         "smallint",
+        "tinyint",
         "numeric",
         "float",
         "double",
